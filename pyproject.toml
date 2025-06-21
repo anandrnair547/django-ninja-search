@@ -1,17 +1,37 @@
 [project]
 name = "django-ninja-search"
 version = "0.1.0"
-description = "Adds a descorator for searching and filtering in django-ninja views"
+description = "A decorator to simplify searching and filtering in Django Ninja views."
 authors = [
-    {name = "Anand R Nair",email = "anand547@outlook.com"}
+  { name = "Anand R Nair", email = "anand547@outlook.com" }
 ]
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.10"
 dependencies = [
-    "django (>=5.2.3,<6.0.0)",
-    "django-ninja (>=1.4.3,<2.0.0)"
+  "django (>=5.1.0,<6.0.0)",
+  "django-ninja (>=1.4.3,<2.0.0)"
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Framework :: Django",
+  "Framework :: Django :: 5.1",
+  "Framework :: Django :: 5.2",
+  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Libraries",
 ]
 
+[tool.poetry]
+packages = [
+    { include = "ninja_search" }
+]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
@@ -20,4 +40,3 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.1"
 pytest-django = "^4.11.1"
-

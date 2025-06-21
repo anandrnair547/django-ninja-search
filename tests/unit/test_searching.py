@@ -1,15 +1,17 @@
 # tests/unit/test_searching.py
+
+
 import pytest
 from django.test import RequestFactory
 from ninja import Query
 from ninja import Schema
-
-from tests.unit.models import Item
+from pydantic import ConfigDict
+from .models import Item
 from ninja_search.searching import searching
 
 
 class DummyFilterSchema(Schema):
-    pass
+    model_config = ConfigDict()
 
 
 @searching(

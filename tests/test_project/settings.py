@@ -4,6 +4,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.auth",
     "tests",
+    "tests.unit.apps.UnitTestsConfig",
 ]
 DATABASES = {
     "default": {
@@ -12,4 +13,6 @@ DATABASES = {
     }
 }
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
-MIGRATION_MODULES = {"tests": None}
+MIGRATION_MODULES = {
+    "tests_unit": None,  # use label from UnitTestsConfig
+}

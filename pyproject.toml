@@ -1,6 +1,6 @@
 [project]
 name = "django-ninja-search"
-version = "0.1.0"
+version = "0.1.1"
 description = "A decorator to simplify searching and filtering in Django Ninja views."
 authors = [
   { name = "Anand R Nair", email = "anand547@outlook.com" }

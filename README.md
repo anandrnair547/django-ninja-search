@@ -93,7 +93,7 @@ Built with ❤️ by [Anand R Nair](mailto:anand547@outlook.com)
 
 * 📘 [Django Ninja Documentation](https://django-ninja.dev)
 * 🐍 [Django](https://www.djangoproject.com/)
-* 🐙 [GitHub Repository](https://github.com/anandrnair/django-ninja-search)
+* 🐙 [GitHub Repository](https://github.com/anandrnair547/django-ninja-search)
 
 ---
 

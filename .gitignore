@@ -1,0 +1,41 @@
+# ───────── Python ──────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.log
+
+# ───────── Virtual Envs ────────
+.venv/
+env/
+venv/
+
+# ───────── Poetry ──────────
+poetry.lock
+
+# ───────── VSCode / Editors ──────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ───────── Test / Coverage ──────
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# ───────── Django ────────
+db.sqlite3
+*.sqlite3
+
+# ───────── Build artefacts ──────
+build/
+dist/
+*.egg-info/
+
+# ───────── System ─────────
+.DS_Store
+
+# ───────── Project-specific ─────
+.env

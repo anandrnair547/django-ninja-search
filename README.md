@@ -1,10 +1,10 @@
-# django-ninja-search
-
 [![PyPI version](https://img.shields.io/pypi/v/django-ninja-search.svg)](https://pypi.org/project/django-ninja-search/)
 [![Python versions](https://img.shields.io/pypi/pyversions/django-ninja-search.svg)](https://pypi.org/project/django-ninja-search/)
 [![Build](https://github.com/anandrnair547/django-ninja-search/actions/workflows/test.yml/badge.svg)](https://github.com/anandrnair547/django-ninja-search/actions)
 [![codecov](https://codecov.io/gh/anandrnair547/django-ninja-search/branch/main/graph/badge.svg)](https://codecov.io/gh/anandrnair547/django-ninja-search)
 [![License](https://img.shields.io/github/license/anandrnair547/django-ninja-search.svg)](https://github.com/anandrnair547/django-ninja-search/blob/main/LICENSE)
+
+# django-ninja-search
 
 A lightweight decorator to add filtering, searching, and sorting support to Django Ninja view functions.
 
@@ -74,7 +74,14 @@ This enables:
 
 ```bash
 poetry install
-poetry run pytest --cov=django_ninja_search
+poetry run pytest --cov=ninja_search --cov-report=html
+```
+
+Open the coverage report in your browser:
+
+```bash
+open htmlcov/index.html  # macOS
+xdg-open htmlcov/index.html  # Linux
 ```
 
 ---
@@ -98,6 +105,23 @@ poetry publish --build -r pypi
 
 ---
 
+## 🔁 Versioning and Release
+
+Before releasing a new version:
+
+```bash
+poetry version patch  # or minor / major
+poetry build
+# Publish using one of the methods above
+
+# Tag and push
+git tag v<new-version>
+git push origin v<new-version>
+git push origin main
+```
+
+---
+
 ## 📚 Metadata & Compatibility
 
 **Python Versions:** 3.10, 3.11, 3.12, 3.13
@@ -105,6 +129,12 @@ poetry publish --build -r pypi
 **License:** MIT
 **Project URL:** [https://github.com/anandrnair547/django-ninja-search](https://github.com/anandrnair547/django-ninja-search)
 **PyPI:** [https://pypi.org/project/django-ninja-search/](https://pypi.org/project/django-ninja-search/)
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! See the [Contributing Guide](https://github.com/anandrnair547/django-ninja-search/blob/main/CONTRIBUTING.md) for setup instructions, test coverage tips, release workflow, and versioning guidance.
 
 ---
 

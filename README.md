@@ -1,15 +1,20 @@
 # django-ninja-search
 
-`django-ninja-search` provides a simple decorator to enable full-text searching and sorting in Django Ninja API views. It’s designed to make your filtering logic easier to reuse and maintain, with zero boilerplate.
+[![PyPI version](https://img.shields.io/pypi/v/django-ninja-search.svg)](https://pypi.org/project/django-ninja-search/)
+[![Python versions](https://img.shields.io/pypi/pyversions/django-ninja-search.svg)](https://pypi.org/project/django-ninja-search/)
+[![Build](https://github.com/anandrnair547/django-ninja-search/actions/workflows/test.yml/badge.svg)](https://github.com/anandrnair547/django-ninja-search/actions)
+[![codecov](https://codecov.io/gh/anandrnair547/django-ninja-search/branch/main/graph/badge.svg)](https://codecov.io/gh/anandrnair547/django-ninja-search)
+[![License](https://img.shields.io/github/license/anandrnair547/django-ninja-search.svg)](https://github.com/anandrnair547/django-ninja-search/blob/main/LICENSE)
+
+A lightweight decorator to add filtering, searching, and sorting support to Django Ninja view functions.
 
 ---
 
-## 🚀 Features
+## ✨ Features
 
-* 🔍 Adds `search` query parameter filtering to Django Ninja views
-* ↕️ Supports `ordering` query parameter for sorting by specified fields
-* 🧩 Pluggable: Works with your existing Pydantic filter schemas
-* 🪶 Lightweight and dependency-free (beyond Django + Ninja)
+* Add full-text search and ordering with a decorator
+* Optional schema-based filtering
+* Works seamlessly with Django ORM and Django Ninja
 
 ---
 
@@ -27,32 +32,41 @@ poetry add django-ninja-search
 
 ---
 
-## 🧑‍💻 Usage
+## 🚀 Usage
+
+### 1. Define your model (example)
 
 ```python
-from ninja import Router, Query
-from pydantic import BaseModel
-from ninja_search import searching
+# models.py
+class Item(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+```
 
-router = Router()
+### 2. Add the decorator to your view
 
-class ItemFilter(BaseModel):
-    pass  # your custom filters can go here
+```python
+# views.py
+from ninja import Query
+from ninja_schema import Schema
+from django_ninja_search import searching
 
-@router.get("/items")
+class ItemFilterSchema(Schema):
+    pass  # You can define extra filters here if needed
+
 @searching(
-    filterSchema=ItemFilter,
+    filterSchema=ItemFilterSchema,
     search_fields=["name", "description"],
-    sort_fields=["name", "price"]
+    sort_fields=["name", "description"],
 )
-def list_items(request, filters: ItemFilter = Query(...)):
+def list_items(request, filters: ItemFilterSchema = Query(...)):
     return Item.objects.all()
 ```
 
-This will automatically:
+This enables:
 
-* Filter by `search=<term>` across `name` and `description`
-* Sort by `ordering=name` or `ordering=-price`
+* `/?search=banana` → filters by search text
+* `/?ordering=name` → sorts results
 
 ---
 
@@ -60,41 +74,40 @@ This will automatically:
 
 ```bash
 poetry install
-PYTHONPATH=. poetry run pytest -v
+poetry run pytest --cov=django_ninja_search
 ```
 
 ---
 
-## 📂 Project Structure
+## 📤 Publishing
 
+### ✅ Publish to Test PyPI
+
+```bash
+poetry config repositories.testpypi https://test.pypi.org/legacy/
+poetry publish --build -r testpypi
 ```
-django-ninja-search/
-├── ninja_search/           # Core package code
-├── tests/                  # Test project & unit tests
-│   ├── test_project/       # Minimal Django project config
-│   ├── unit/               # Tests for searching decorator
+
+### 🚀 Publish to PyPI
+
+```bash
+poetry config repositories.pypi https://upload.pypi.org/legacy/
+poetry config pypi-token.pypi <your-token-here>
+poetry publish --build -r pypi
 ```
 
 ---
 
-## 📝 License
+## 📚 Metadata & Compatibility
 
-MIT License
-
----
-
-## 👤 Author
-
-Built with ❤️ by [Anand R Nair](mailto:anand547@outlook.com)
+**Python Versions:** 3.10, 3.11, 3.12, 3.13
+**Django Versions:** >=5.1.0
+**License:** MIT
+**Project URL:** [https://github.com/anandrnair547/django-ninja-search](https://github.com/anandrnair547/django-ninja-search)
+**PyPI:** [https://pypi.org/project/django-ninja-search/](https://pypi.org/project/django-ninja-search/)
 
 ---
 
-## 🌐 Links
+## 🧾 License
 
-* 📘 [Django Ninja Documentation](https://django-ninja.dev)
-* 🐍 [Django](https://www.djangoproject.com/)
-* 🐙 [GitHub Repository](https://github.com/anandrnair547/django-ninja-search)
-
----
-
-Enjoying the project? Consider starring it ⭐ to support the maintainer!
+MIT © [Anand R Nair](https://github.com/anandrnair547)

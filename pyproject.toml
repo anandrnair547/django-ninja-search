@@ -1,6 +1,6 @@
 [project]
 name = "django-ninja-search"
-version = "0.1.4"
+version = "0.1.5"
 description = "A decorator to simplify searching and filtering in Django Ninja views."
 authors = [
   { name = "Anand R Nair", email = "anand547@outlook.com" }
@@ -8,8 +8,8 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-  "django (>=5.1.0,<6.0.0)",
-  "django-ninja (>=1.4.3,<2.0.0)",
+  "django (>=5.0.0,<6.0.0)",
+  "django-ninja (>=1.0.0,<2.0.0)",
 ]
 classifiers = [
   "Development Status :: 3 - Alpha",
@@ -30,7 +30,7 @@ classifiers = [
 
 [tool.poetry]
 name        = "django-ninja-search"
-version     = "0.1.4"
+version     = "0.1.5"
 description = "Adds a decorator for searching and filtering in Django Ninja views"
 authors     = ["Anand R Nair <anand547@outlook.com>"]
 packages    = [{ include = "ninja_search" }]

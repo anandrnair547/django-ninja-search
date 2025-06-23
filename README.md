@@ -49,7 +49,7 @@ class Item(models.Model):
 # views.py
 from ninja import Query
 from ninja_schema import Schema
-from django_ninja_search import searching
+from ninja_search.searching import searching
 
 class ItemFilterSchema(Schema):
     pass  # You can define extra filters here if needed

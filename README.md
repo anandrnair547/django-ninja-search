@@ -115,8 +115,9 @@ poetry build
 # Publish using one of the methods above
 
 # Tag and push
-git tag v<new-version>
-git push origin v<new-version>
+NEW_VERSION=$(poetry version -s)
+git tag v$NEW_VERSION
+git push origin v$NEW_VERSION
 git push origin main
 ```
 

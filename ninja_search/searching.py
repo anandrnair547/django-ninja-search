@@ -47,6 +47,10 @@ def searching(
                 if normalized.lstrip("-") in sort_fields:
                     queryset = queryset.order_by(normalized)
 
+            # filtering
+            if filters:
+                queryset = filters.filter(queryset)
+
             return queryset
 
         return wrapper

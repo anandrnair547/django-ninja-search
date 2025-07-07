@@ -6,7 +6,7 @@ from ninja import Query
 
 
 def _normalize(fields: List[str]) -> List[str]:
-    """Convert dot-notation to Django’s double-underscore."""
+    """Convert dot-notation to Django's double-underscore."""
     return [f.replace(".", "__") for f in fields]
 
 
@@ -46,6 +46,10 @@ def searching(
                 normalized = sort_term.replace(".", "__")
                 if normalized.lstrip("-") in sort_fields:
                     queryset = queryset.order_by(normalized)
+            else:
+                # Default ordering if no sort term is provided
+                if normalized := _normalize(sort_fields):
+                    queryset = queryset.order_by(*normalized)
 
             # filtering
             if filters:

@@ -30,16 +30,18 @@ def searching(
 
             # --- full-text search ---
             if search_term:
-                terms = [t for t in re.split(r"\\s+", search_term) if len(t) > 1]
-                q_obj = functools.reduce(
-                    lambda acc, q: acc | q,
-                    (
-                        Q(**{f + "__icontains": term})
-                        for term in terms
-                        for f in search_fields
-                    ),
-                )
-                queryset = queryset.filter(q_obj)
+                terms = [t for t in re.split(r"\s+", search_term) if len(t) > 1]
+                if terms and search_fields:
+                    q_obj = functools.reduce(
+                        lambda acc, q: acc | q,
+                        (
+                            Q(**{f + "__icontains": term})
+                            for term in terms
+                            for f in search_fields
+                        ),
+                        Q(),  # initial value to prevent TypeError
+                    )
+                    queryset = queryset.filter(q_obj)
 
             # --- ordering ---
             if sort_term:

@@ -1,0 +1,3 @@
+[submodule "agent-setup"]
+	path = agent-setup
+	url = git@github.com:anandrnair547/agent-setup.git

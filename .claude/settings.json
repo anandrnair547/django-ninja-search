@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pytest:*)",
+      "Bash(pytest --cov:*)",
+      "Bash(ruff check:*)",
+      "Bash(ruff format:*)",
+      "Bash(pip install:*)",
+      "Bash(poetry install:*)",
+      "Bash(poetry run:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m:*)",
+      "Bash(git push:*)",
+      "Bash(git checkout -b:*)",
+      "Bash(git log:*)"
+    ]
+  }
+}

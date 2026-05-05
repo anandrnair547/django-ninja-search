@@ -142,3 +142,23 @@ We welcome contributions! See the [Contributing Guide](https://github.com/anandr
 ## 🧾 License
 
 MIT © [Anand R Nair](https://github.com/anandrnair547)
+
+
+## AI Development Setup (Optional)
+
+This repo uses an `agent-setup` submodule — a shared AI agent framework with agents, workflows, and skills for Claude Code, Cursor, Copilot, and other AI tools.
+
+After cloning, initialize it if you use AI-assisted development:
+
+```bash
+git submodule update --init --recursive
+```
+
+This is **optional** — the submodule is only needed for AI tooling. The app runs fine without it.
+
+To pull the latest agent framework updates:
+
+```bash
+git submodule update --remote agent-setup
+```
+

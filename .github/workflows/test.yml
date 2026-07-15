@@ -23,6 +23,7 @@ jobs:
             "3.11",
             "3.12",
             "3.13",
+            "3.14",
           ]
     steps:
       - uses: actions/checkout@v4
@@ -42,7 +43,7 @@ jobs:
         run: poetry install --with dev
 
       - name: Run tests with coverage
-        run: poetry run pytest --cov=django_ninja_search --cov-report=xml
+        run: poetry run pytest --cov=ninja_search --cov-report=xml
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4

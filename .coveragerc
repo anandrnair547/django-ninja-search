@@ -1,5 +1,5 @@
 [run]
-source = django_ninja_search
+source = ninja_search
 branch = True
 
 [report]

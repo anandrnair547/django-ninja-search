@@ -54,7 +54,7 @@ def searching(
                     queryset = queryset.order_by(*normalized)
 
             # filtering
-            if filters:
+            if filters is not None and hasattr(filters, "filter"):
                 queryset = filters.filter(queryset)
 
             return queryset

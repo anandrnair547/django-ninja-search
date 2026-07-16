@@ -2,17 +2,35 @@ name: CI
 
 on:
   push:
-    branches:
-      [
-        main,
-      ]
+    branches: [main]
   pull_request:
-    branches:
-      [
-        main,
-      ]
+    branches: [main]
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v4
+        with:
+          poetry-version: "2.1.3"
+
+      - name: Install dependencies
+        run: poetry install --with dev
+
+      - name: Ruff lint
+        run: poetry run ruff check .
+
+      - name: Ruff format check
+        run: poetry run ruff format --check .
+
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -32,12 +50,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: "pip"
 
       - name: Install Poetry
-        uses: abatilo/actions-poetry@v3
+        uses: abatilo/actions-poetry@v4
         with:
-          poetry-version: "1.8.2"
+          poetry-version: "2.1.3"
 
       - name: Install dependencies
         run: poetry install --with dev
@@ -46,7 +63,7 @@ jobs:
         run: poetry run pytest --cov=ninja_search --cov-report=xml
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml

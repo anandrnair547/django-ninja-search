@@ -13,6 +13,3 @@ DATABASES = {
     }
 }
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
-MIGRATION_MODULES = {
-    "tests_unit": None,  # use label from UnitTestsConfig
-}

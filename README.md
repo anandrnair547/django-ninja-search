@@ -12,8 +12,10 @@ A lightweight decorator to add filtering, searching, and sorting support to Djan
 
 ## ✨ Features
 
-* Add full-text search and ordering with a decorator
-* Optional schema-based filtering
+* Multi-term substring search (`?search=`) with a decorator — each term must match (AND), across any of the configured fields (OR, `icontains`)
+* Safe, allowlisted ordering (`?ordering=`) with comma-separated multi-field and `-` descending support
+* Optional filtering via `ninja.FilterSchema`
+* `search`, `ordering`, and `filters` show up in the OpenAPI schema / interactive docs
 * Works seamlessly with Django ORM and Django Ninja
 
 ---
@@ -47,26 +49,44 @@ class Item(models.Model):
 
 ```python
 # views.py
-from ninja import Query
-from ninja_schema import Schema
-from ninja_search.searching import searching
+from ninja import FilterSchema
+from ninja_search import searching
 
-class ItemFilterSchema(Schema):
-    pass  # You can define extra filters here if needed
 
+class ItemFilterSchema(FilterSchema):
+    name: str | None = None  # exact-match filter, e.g. /?name=Banana
+
+
+@api.get("/items", response=list[ItemSchema])
 @searching(
-    filterSchema=ItemFilterSchema,
+    filter_schema=ItemFilterSchema,  # optional
     search_fields=["name", "description"],
     sort_fields=["name", "description"],
 )
-def list_items(request, filters: ItemFilterSchema = Query(...)):
+def list_items(request):
     return Item.objects.all()
 ```
 
 This enables:
 
-* `/?search=banana` → filters by search text
-* `/?ordering=name` → sorts results
+* `/?search=yellow banana` → rows where **every** term matches `name` or `description` (case-insensitive substring)
+* `/?ordering=name` or `/?ordering=-name,description` → sorts results (only fields in `sort_fields` are accepted; anything else falls back to the default ordering)
+* `/?name=Banana` → filtering via your `FilterSchema`
+
+Notes:
+
+* The decorated view must return a `QuerySet` (or a `(status, QuerySet)` tuple).
+* `filter_schema` must subclass `ninja.FilterSchema` — a plain `ninja.Schema` has no `.filter()` and is rejected with a `TypeError` at import time.
+* When no `?ordering=` is given (or the value is invalid), results are ordered by `sort_fields` as declared, so pagination stays stable.
+* Related fields work with dot notation (`"author.name"`); searches across to-many relations are de-duplicated automatically.
+* At most 10 search terms are applied per request (`ninja_search.MAX_SEARCH_TERMS`).
+
+### Upgrading from 0.1.x / 0.2.0 (breaking changes in 0.3.0)
+
+* `filterSchema=` is deprecated — use `filter_schema=`. It must now be a `ninja.FilterSchema` subclass; with plain `Schema` classes filtering silently did nothing.
+* Multi-term search now ANDs terms (`?search=red apple` no longer matches rows that only contain "red").
+* Single-character search terms are no longer ignored.
+* Views no longer need to declare a `filters` parameter — the decorator adds it (plus `search` and `ordering`) to the endpoint signature automatically.
 
 ---
 
@@ -125,8 +145,9 @@ git push origin main
 
 ## 📚 Metadata & Compatibility
 
-**Python Versions:** 3.10, 3.11, 3.12, 3.13
-**Django Versions:** >=5.1.0
+**Python Versions:** 3.10, 3.11, 3.12, 3.13, 3.14
+**Django Versions:** >=5.1, <7.0
+**Django Ninja Versions:** >=1.4.3, <2.0
 **License:** MIT
 **Project URL:** [https://github.com/anandrnair547/django-ninja-search](https://github.com/anandrnair547/django-ninja-search)
 **PyPI:** [https://pypi.org/project/django-ninja-search/](https://pypi.org/project/django-ninja-search/)
@@ -161,4 +182,3 @@ To pull the latest agent framework updates:
 ```bash
 git submodule update --remote agent-setup
 ```
-

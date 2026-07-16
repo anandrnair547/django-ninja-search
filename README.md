@@ -83,6 +83,8 @@ Notes:
 
 ### Upgrading from 0.1.x / 0.2.0 (breaking changes in 0.3.0)
 
+See the [Migration Guide](MIGRATION.md) for before/after examples. Summary:
+
 * `filterSchema=` is deprecated — use `filter_schema=`. It must now be a `ninja.FilterSchema` subclass; with plain `Schema` classes filtering silently did nothing.
 * Multi-term search now ANDs terms (`?search=red apple` no longer matches rows that only contain "red").
 * Single-character search terms are no longer ignored.

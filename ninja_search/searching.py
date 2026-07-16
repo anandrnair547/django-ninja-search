@@ -1,8 +1,9 @@
 import functools
 import inspect
+import operator
 import warnings
 from collections.abc import Callable, Sequence
-from typing import Any
+from typing import Any, Literal
 
 from django.db.models import Q, QuerySet
 from ninja import FilterSchema, Query
@@ -24,13 +25,15 @@ def searching(
     filter_schema: type[FilterSchema] | None = None,
     search_fields: Sequence[str] | None = None,
     sort_fields: Sequence[str] | None = None,
+    search_mode: Literal["and", "or"] = "and",
     filterSchema: type[FilterSchema] | None = None,  # noqa: N803
 ) -> Callable[[View], View]:
     """Add ``?search=``, ``?ordering=`` and FilterSchema filtering to a view.
 
     The decorated view must return a ``QuerySet`` or a ``(status, QuerySet)``
-    tuple. ``search`` matches every whitespace-separated term (AND) against
-    any of ``search_fields`` (OR, ``__icontains``). ``ordering`` accepts a
+    tuple. ``search`` matches every whitespace-separated term (AND, or any
+    term with ``search_mode="or"``) against any of ``search_fields`` (OR,
+    ``__icontains``). ``ordering`` accepts a
     comma-separated list of ``sort_fields`` entries, each optionally prefixed
     with ``-``; invalid values fall back to the default ordering
     (``sort_fields`` as declared). ``filter_schema`` must be a
@@ -38,6 +41,8 @@ def searching(
     ``filters`` parameter itself, one is added to its exposed signature so
     Django Ninja parses and documents it.
     """
+    if search_mode not in ("and", "or"):
+        raise ValueError(f'search_mode must be "and" or "or", got {search_mode!r}')
     if filterSchema is not None:
         warnings.warn(
             "searching(filterSchema=...) is deprecated; use filter_schema=...",
@@ -98,17 +103,23 @@ def searching(
                     f"or a (status, QuerySet) tuple, got {type(result).__name__}"
                 )
 
-            # --- search: AND across terms, OR across fields ---
-            # One .filter() call per term: a single combined filter would
-            # reuse one JOIN for to-many relations, wrongly requiring every
-            # term to match the same related row.
+            # --- search: AND (default) or OR across terms, OR across fields ---
+            # AND uses one .filter() call per term: a single combined filter
+            # would reuse one JOIN for to-many relations, wrongly requiring
+            # every term to match the same related row.
             terms = search_term.split()[:MAX_SEARCH_TERMS]
             if terms and search_fields:
+                term_qs = []
                 for term in terms:
                     term_q = Q()
                     for field in search_fields:
                         term_q |= Q(**{f"{field}__icontains": term})
-                    queryset = queryset.filter(term_q)
+                    term_qs.append(term_q)
+                if search_mode == "or":
+                    queryset = queryset.filter(functools.reduce(operator.or_, term_qs))
+                else:
+                    for term_q in term_qs:
+                        queryset = queryset.filter(term_q)
                 if needs_distinct:
                     queryset = queryset.distinct()
 

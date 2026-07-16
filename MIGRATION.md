@@ -70,8 +70,13 @@ default, and views declaring `filters` without a default raised
 `?search=red apple` previously matched rows containing *either* term.
 Now every term must match at least one of `search_fields`.
 
-If your clients rely on OR behavior, send separate requests per term or
-broaden `search_fields`. Related changes:
+If your clients rely on OR behavior, keep it with one kwarg:
+
+```python
+@searching(search_fields=["name", "description"], search_mode="or")
+```
+
+Related changes:
 
 - Single-character terms are no longer dropped. `?search=a` used to
   return the **entire unfiltered table**; now it filters like any term.

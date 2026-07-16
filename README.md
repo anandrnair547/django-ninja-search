@@ -12,7 +12,7 @@ A lightweight decorator to add filtering, searching, and sorting support to Djan
 
 ## ✨ Features
 
-* Multi-term substring search (`?search=`) with a decorator — each term must match (AND), across any of the configured fields (OR, `icontains`)
+* Multi-term substring search (`?search=`) with a decorator — each term must match (AND, default) or any term may match (`search_mode="or"`), across any of the configured fields (OR, `icontains`)
 * Safe, allowlisted ordering (`?ordering=`) with comma-separated multi-field and `-` descending support
 * Optional filtering via `ninja.FilterSchema`
 * `search`, `ordering`, and `filters` show up in the OpenAPI schema / interactive docs
@@ -80,6 +80,7 @@ Notes:
 * When no `?ordering=` is given (or the value is invalid), results are ordered by `sort_fields` as declared, so pagination stays stable.
 * Related fields work with dot notation (`"author.name"`); searches across to-many relations are de-duplicated automatically.
 * At most 10 search terms are applied per request (`ninja_search.MAX_SEARCH_TERMS`).
+* Pass `search_mode="or"` to match rows containing *any* term instead of all terms (the 0.1.x behavior).
 
 ### Upgrading from 0.1.x / 0.2.0 (breaking changes in 0.3.0)
 

@@ -79,6 +79,36 @@ def test_search_across_to_many_relation_is_distinct():
 
 
 @pytest.mark.django_db
+def test_search_mode_or_matches_any_term(fruit):
+    @searching(search_fields=["name"], sort_fields=["name"], search_mode="or")
+    def items(request):
+        return Item.objects.all()
+
+    result = items(get("?search=Banana+Apple"))
+    assert list(result.values_list("name", flat=True)) == ["Apple", "Banana"]
+    # AND default would return nothing for these two terms
+    assert list_items(get("?search=Banana+Apple")).count() == 0
+
+
+@pytest.mark.django_db
+def test_search_mode_or_across_to_many_is_distinct():
+    banana = Item.objects.create(name="Banana", description="Yellow fruit")
+    Tag.objects.create(item=banana, label="sweet fruit")
+    Tag.objects.create(item=banana, label="tropical fruit")
+
+    @searching(search_fields=["tags.label"], search_mode="or")
+    def by_tag(request):
+        return Item.objects.all()
+
+    assert by_tag(get("?search=sweet+tropical")).count() == 1
+
+
+def test_invalid_search_mode_rejected():
+    with pytest.raises(ValueError, match="search_mode"):
+        searching(search_fields=["name"], search_mode="xor")
+
+
+@pytest.mark.django_db
 def test_multi_term_search_matches_across_different_related_rows():
     # each term may be satisfied by a DIFFERENT related row
     banana = Item.objects.create(name="Banana", description="Yellow fruit")
